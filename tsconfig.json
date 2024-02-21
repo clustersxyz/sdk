@@ -1,0 +1,15 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "es5",
+    "lib": ["es2020"],
+    "declaration": true,
+    "outDir": "./lib",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "strict": true,
+    "types": ["node"]
+  },
+  "include": ["src/**/*"],
+  "exclude": ["examples/*"]
+}

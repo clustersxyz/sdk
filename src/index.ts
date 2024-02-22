@@ -1,31 +1,31 @@
-import { ResolveWalletsItem, getResolveAddress, getResolveName, getResolveWallets } from './api';
-import { Wallet } from './types';
+import { fetchAddress, fetchCluster, fetchName } from './api';
+import { Cluster, Wallet } from './types';
 
 export const Clusters = class {
   constructor() {}
 
-  resolveName = async (address: string): Promise<string | null> => {
+  getName = async (address: string): Promise<string | null> => {
     try {
-      return await getResolveName(address);
+      return await fetchName(address);
     } catch (err) {
       return null;
     }
   };
 
-  resolveAddress = async (cluster: string): Promise<Wallet | null> => {
+  getAddress = async (name: string): Promise<Wallet | null> => {
     try {
-      const splitCluster = cluster.split('/');
-      return await getResolveAddress(splitCluster[0], splitCluster[1] || undefined);
+      const splitCluster = name.split('/');
+      return await fetchAddress(splitCluster[0], splitCluster[1] || undefined);
     } catch {
       return null;
     }
   };
 
-  resolveWallets = async (clusterName: string): Promise<ResolveWalletsItem[]> => {
+  getCluster = async (clusterName: string): Promise<Cluster | null> => {
     try {
-      return await getResolveWallets(clusterName);
+      return await fetchCluster(clusterName);
     } catch {
-      return [];
+      return null;
     }
   };
 };

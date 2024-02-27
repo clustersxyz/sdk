@@ -2,11 +2,15 @@ import { fetchAddress, fetchAddresses, fetchCluster, fetchClusters, fetchName, f
 import { Cluster, Wallet } from './types';
 
 export const Clusters = class {
-  constructor() {}
+  apiKey: string | undefined = undefined;
+
+  constructor(obj?: { apiKey: string }) {
+    this.apiKey = obj?.apiKey;
+  }
 
   getName = async (address: string): Promise<string | null> => {
     try {
-      return await fetchName(address);
+      return await fetchName(address, this.apiKey);
     } catch (err) {
       return null;
     }
@@ -14,7 +18,7 @@ export const Clusters = class {
 
   getNames = async (addresses: string[]): Promise<{ address: string; name: string }[]> => {
     try {
-      return await fetchNames(addresses);
+      return await fetchNames(addresses, this.apiKey);
     } catch (err) {
       return [];
     }
@@ -23,7 +27,7 @@ export const Clusters = class {
   getAddress = async (name: string): Promise<Wallet | null> => {
     try {
       const splitCluster = name.split('/');
-      return await fetchAddress(splitCluster[0], splitCluster[1] || undefined);
+      return await fetchAddress(splitCluster[0], splitCluster[1] || undefined, this.apiKey);
     } catch {
       return null;
     }
@@ -31,7 +35,7 @@ export const Clusters = class {
 
   getAddresses = async (names: string[]): Promise<Wallet[]> => {
     try {
-      return await fetchAddresses(names);
+      return await fetchAddresses(names, this.apiKey);
     } catch {
       return [];
     }
@@ -39,7 +43,7 @@ export const Clusters = class {
 
   getCluster = async (clusterName: string): Promise<Cluster | null> => {
     try {
-      return await fetchCluster(clusterName);
+      return await fetchCluster(clusterName, this.apiKey);
     } catch {
       return null;
     }
@@ -47,7 +51,7 @@ export const Clusters = class {
 
   getClusters = async (clusterNames: string[]): Promise<Cluster[]> => {
     try {
-      return await fetchClusters(clusterNames);
+      return await fetchClusters(clusterNames, this.apiKey);
     } catch {
       return [];
     }

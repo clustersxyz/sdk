@@ -68,7 +68,7 @@ const cluster = await clusters.getCluster('clusters/');
 
 ```
 {
-  "name": "clusters",
+  "name": "clusters/",
   "wallets": [
     {
       "type": "evm",
@@ -78,4 +78,115 @@ const cluster = await clusters.getCluster('clusters/');
     }
   ]
 }
+```
+
+# Bulk fetch
+
+## getNames(address[])
+
+Get the cluster and wallet names from a list of addresses
+
+```
+const clusterName = await clusters.getNames([
+    '0x5755d1dcea21caa687339c305d143e6e78f96adf',
+    '0xccdead94e8cf17de32044d9701c4f5668ad0bef9'
+])
+```
+
+**Returns**
+
+```
+[
+  {
+    address: "0x5755d1dcea21caa687339c305d143e6e78f96adf",
+    name: "clusters/main"
+  }, {
+    address: "0xccdead94e8cf17de32044d9701c4f5668ad0bef9",
+    name: "layerzero/main"
+  }
+]
+```
+
+## getAddresses(name[])
+
+Get the wallets associated to multiple cluster names. You can pass just the cluster name or also include the wallet name.
+
+```
+const clusterAddresses = await clusters.getAddresses([
+    "clusters/",
+    "clusters/main",
+    "layerzero/",
+    "layerzero/main"
+]);
+```
+
+**Returns**
+
+```
+[
+  {
+    name: "clusters/",
+    type: "evm",
+    address: "0x5755d1dcea21caa687339c305d143e6e78f96adf",
+    isVerified: true
+  },
+  {
+    name: "clusters/main",
+    type: "evm",
+    address: "0x5755d1dcea21caa687339c305d143e6e78f96adf",
+    isVerified: true
+  },
+  {
+    name: "layerzero/",
+    type: "evm",
+    address: "0xccdead94e8cf17de32044d9701c4f5668ad0bef9",
+    isVerified: true
+  },
+  {
+    name: "layerzero/main",
+    type: "evm",
+    address: "0xccdead94e8cf17de32044d9701c4f5668ad0bef9",
+    isVerified: true
+  }
+]
+```
+
+## getClusters(clusterName[])
+
+Get the clusters from a list of cluster names
+
+```
+const clusters = await clusters.getClusters([
+    "clusters/",
+    "layerzero/"
+]);
+```
+
+**Returns**
+
+```
+[
+  {
+    name: "clusters/",
+    wallets: [
+      {
+        name: "clusters/main",
+        type: "evm",
+        address: "0x5755d1dcea21caa687339c305d143e6e78f96adf",
+        isVerified: true
+      }
+    ]
+  },
+  {
+    name: "layerzero/",
+    wallets: [
+      {
+        name: "layerzero/main",
+        type: "evm",
+        address: "0xccdead94e8cf17de32044d9701c4f5668ad0bef9",
+        isVerified: true
+      }
+    ]
+  }
+]
 ```

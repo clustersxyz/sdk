@@ -1,6 +1,5 @@
 import { fetchAddress, fetchAddresses, fetchCluster, fetchClusters, fetchName, fetchNames } from './api';
-import { Cluster, Wallet } from './types';
-export { getImageUrl, getProfileUrl } from './utils';
+import type { Cluster, Wallet } from './types';
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;
@@ -57,4 +56,14 @@ export const Clusters = class {
       return [];
     }
   };
+};
+
+export const getImageUrl = (name: string) => {
+  const splitName = name.toLowerCase().split('/');
+  return `https://cdn.clusters.xyz/profile/${splitName[0]}`;
+};
+
+export const getProfileUrl = (name: string) => {
+  const splitName = name.toLowerCase().split('/');
+  return `https://clusters.xyz/${splitName[0]}`;
 };

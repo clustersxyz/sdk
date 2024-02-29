@@ -1,5 +1,6 @@
 import { fetchAddress, fetchAddresses, fetchCluster, fetchClusters, fetchName, fetchNames } from './api';
 import { Cluster, Wallet } from './types';
+export { getImageUrl, getProfileUrl } from './utils';
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;
@@ -57,5 +58,3 @@ export const Clusters = class {
     }
   };
 };
-
-export * from './utils';

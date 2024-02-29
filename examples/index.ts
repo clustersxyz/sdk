@@ -1,4 +1,4 @@
-import { Clusters } from '../lib/index';
+import { Clusters, getProfileUrl, getImageUrl } from '../lib/index';
 
 const clusters = new Clusters();
 
@@ -21,3 +21,8 @@ console.log(
   await clusters.getAddresses(['clusters/', 'clusters/main', 'layerzero/', 'layerzero/main']),
 );
 console.log('getClusters(["clusters/", "layerzero/"])', await clusters.getClusters(['clusters/', 'layerzero/']));
+
+console.log('-- utils --');
+
+console.log('getImageUrl("clusters/")', getImageUrl('clusters/'));
+console.log('getProfileUrl("clusters/")', getProfileUrl('clusters/'));

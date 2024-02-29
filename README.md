@@ -190,3 +190,13 @@ const clusters = await clusters.getClusters([
   }
 ]
 ```
+
+## Utilities
+
+```
+import { getImageUrl, getProfileUrl } from "@clustersxyz/sdk"
+
+const imageUrl = getImageUrl("clusters/");
+const profileUrl = getProfileUrl("clusters/");
+
+```

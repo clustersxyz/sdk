@@ -7,5 +7,7 @@ export type Wallet = {
 
 export type Cluster = {
   name: string;
+  imageUrl: string;
+  profileUrl: string;
   wallets: Wallet[];
 };

@@ -56,6 +56,16 @@ export const Clusters = class {
       return [];
     }
   };
+
+  getClusterByAddress = async (address: string): Promise<Cluster | null> => {
+    try {
+      const clusterName = await this.getName(address);
+      if (!clusterName) return null;
+      return await this.getCluster(clusterName?.split('/')[0]);
+    } catch {
+      return null;
+    }
+  };
 };
 
 export const getImageUrl = (name: string) => {

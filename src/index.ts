@@ -67,3 +67,13 @@ export const getProfileUrl = (name: string) => {
   const splitName = name.toLowerCase().split('/');
   return `https://clusters.xyz/${splitName[0]}`;
 };
+
+export const normalizeName = (name: string): string => {
+  return name.normalize('NFC');
+}
+
+export const isNameValid = (name: string): boolean => {
+  // Is name > 32 bytes
+  if (encodeURI(name).split(/%..|./).length - 1 > 32) return false;
+  return true;
+}

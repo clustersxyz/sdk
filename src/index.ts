@@ -70,10 +70,11 @@ export const getProfileUrl = (name: string) => {
 
 export const normalizeName = (name: string): string => {
   return name.normalize('NFC');
-}
+};
 
 export const isNameValid = (name: string): boolean => {
+  const normalized = normalizeName(name);
   // Is name > 32 bytes
-  if (encodeURI(name).split(/%..|./).length - 1 > 32) return false;
+  if (encodeURI(normalized).split(/%..|./).length - 1 > 32) return false;
   return true;
-}
+};

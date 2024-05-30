@@ -80,6 +80,36 @@ const cluster = await clusters.getCluster('clusters/');
 }
 ```
 
+## getClusterByAddress(clusterName)
+
+Get the cluster from an address
+
+```
+const cluster = await clusters.getClusterByAddress('0x5755d1dcea21caa687339c305d143e6e78f96adf');
+```
+
+**Returns**
+
+```
+{
+  "name": "clusters/",
+  "wallets": [
+    {
+      "type": "evm",
+      "address": "0x5755d1dcea21caa687339c305d143e6e78f96adf",
+      "name": "clusters/main",
+      "isVerified": true
+    },
+    {
+      "type": "evm",
+      "address": "0x00000000000e1a99dddd5610111884278bdbda1d",
+      "name": "clusters/protocol",
+      "isVerified": false
+    }
+  ]
+}
+```
+
 # Bulk fetch
 
 ## getNames(address[])

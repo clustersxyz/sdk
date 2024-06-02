@@ -9,8 +9,7 @@ import {
 } from './types';
 
 const VERSION = '0.1';
-// const API_URL = 'https://api.clusters.xyz';
-const API_URL = 'http://localhost:60000';
+const API_URL = 'https://api.clusters.xyz';
 
 const generateHeaders = (apiKey?: string): { [key: string]: string } => {
   const headerObject: { [key: string]: string } = {

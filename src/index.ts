@@ -23,7 +23,7 @@ import type {
 export const Clusters = class {
   apiKey: string | undefined = undefined;
 
-  constructor(obj?: { apiKey: string; authKey?: string }) {
+  constructor(obj?: { apiKey: string }) {
     this.apiKey = obj?.apiKey;
   }
 

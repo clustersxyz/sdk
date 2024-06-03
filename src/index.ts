@@ -136,9 +136,8 @@ export const normalizeName = (name: string): string => {
   return name.toLowerCase().normalize('NFC');
 };
 
-const bannedCharacters = ['/', ' '];
-
 export const isNameValid = (name: string): boolean => {
+  const bannedCharacters = ['/', ' '];
   const normalized = normalizeName(name);
   // Check if name contains any banned characters
   if (bannedCharacters.some(char => normalized.includes(char))) return false;

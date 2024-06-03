@@ -1,5 +1,24 @@
-import { fetchAddress, fetchAddresses, fetchCluster, fetchClusters, fetchName, fetchNames } from './api';
-import type { Cluster, Wallet } from './types';
+import {
+  fetchAddress,
+  fetchAddresses,
+  fetchCluster,
+  fetchClusters,
+  fetchName,
+  fetchNameAvailability,
+  fetchNameAvailabilityBatch,
+  fetchNames,
+  fetchRegistrationTransaction,
+  fetchTransactionStatus,
+} from './api';
+import type {
+  Cluster,
+  NameAvailability,
+  Network,
+  RegistrationName,
+  RegistrationResponse,
+  RegistrationTransactionStatusResponse,
+  Wallet,
+} from './types';
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;
@@ -56,6 +75,51 @@ export const Clusters = class {
       return [];
     }
   };
+
+  getNameAvailability = async (name: string): Promise<NameAvailability> => {
+    try {
+      return await fetchNameAvailability(name, this.apiKey);
+    } catch {
+      return {
+        name,
+        isAvailable: false,
+      };
+    }
+  };
+
+  getNameAvailabilityBatch = async (names: string[]): Promise<NameAvailability[]> => {
+    try {
+      return await fetchNameAvailabilityBatch(names, this.apiKey);
+    } catch {
+      return names.map((name) => ({
+        name,
+        isAvailable: false,
+      }));
+    }
+  };
+
+  getRegistrationTransaction = async (
+    names: RegistrationName[],
+    sender: string,
+    network: Network,
+  ): Promise<RegistrationResponse | null> => {
+    try {
+      return await fetchRegistrationTransaction(names, sender, network, this.apiKey);
+    } catch {
+      return null;
+    }
+  };
+
+  getTransactionStatus = async (tx: `0x${string}`): Promise<RegistrationTransactionStatusResponse> => {
+    try {
+      return await fetchTransactionStatus(tx, this.apiKey);
+    } catch {
+      return {
+        tx,
+        status: 'not_found',
+      };
+    }
+  };
 };
 
 export const getImageUrl = (name: string) => {
@@ -69,7 +133,7 @@ export const getProfileUrl = (name: string) => {
 };
 
 export const normalizeName = (name: string): string => {
-  return name.normalize('NFC');
+  return name.toLowerCase().normalize('NFC');
 };
 
 export const isNameValid = (name: string): boolean => {

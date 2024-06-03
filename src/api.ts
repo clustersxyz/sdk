@@ -1,15 +1,22 @@
-import { Cluster, Wallet } from './types';
+import {
+  Cluster,
+  NameAvailability,
+  Network,
+  RegistrationName,
+  RegistrationResponse,
+  RegistrationTransactionStatus,
+  Wallet,
+} from './types';
 
 const VERSION = '0.1';
 const API_URL = 'https://api.clusters.xyz';
 
 const generateHeaders = (apiKey?: string): { [key: string]: string } => {
-  if (apiKey)
-    return {
-      'X-API-KEY': apiKey,
-    };
-
-  return {};
+  const headerObject: { [key: string]: string } = {
+    'Content-Type': 'application/json',
+  };
+  if (apiKey) headerObject['X-API-KEY'] = apiKey;
+  return headerObject;
 };
 
 export const fetchName = async (address: string, apiKey?: string): Promise<string | null> => {
@@ -67,4 +74,57 @@ export const fetchClusters = async (names: string[], apiKey?: string): Promise<C
   });
   const clusters = (await fetchClusters.json()) as Cluster[];
   return clusters;
+};
+
+//
+
+export const fetchNameAvailability = async (name: string, apiKey?: string): Promise<NameAvailability> => {
+  const getData = await fetch(`${API_URL}/v${VERSION}/register/check/${name}`, {
+    headers: generateHeaders(apiKey || undefined),
+  });
+  const data = (await getData.json()) as NameAvailability;
+  return data;
+};
+
+export const fetchNameAvailabilityBatch = async (names: string[], apiKey?: string): Promise<NameAvailability[]> => {
+  const getData = await fetch(`${API_URL}/v${VERSION}/register/check`, {
+    method: 'POST',
+    headers: generateHeaders(apiKey || undefined),
+    body: JSON.stringify(names),
+  });
+  const data = (await getData.json()) as NameAvailability[];
+  return data;
+};
+
+export const fetchRegistrationTransaction = async (
+  names: RegistrationName[],
+  sender: string,
+  network: Network,
+  apiKey?: string,
+): Promise<RegistrationResponse> => {
+  const getData = await fetch(`${API_URL}/v${VERSION}/register`, {
+    method: 'POST',
+    headers: generateHeaders(apiKey || undefined),
+    body: JSON.stringify({
+      names,
+      sender,
+      network,
+    }),
+  });
+  const data = (await getData.json()) as RegistrationResponse;
+  return data;
+};
+
+export const fetchTransactionStatus = async (
+  tx: `0x${string}`,
+  apiKey?: string,
+): Promise<{
+  tx: `0x${string}`;
+  status: RegistrationTransactionStatus;
+}> => {
+  const getData = await fetch(`${API_URL}/v${VERSION}/register/tx/${tx}`, {
+    headers: generateHeaders(apiKey || undefined),
+  });
+  const data = (await getData.json()) as { tx: `0x${string}`; status: RegistrationTransactionStatus };
+  return data;
 };

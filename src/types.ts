@@ -7,8 +7,9 @@ export type Wallet = {
 
 export type Cluster = {
   name: string;
-  imageUrl: string;
   profileUrl: string;
+  imageUrl: string;
+  hasCustomImage: boolean;
   wallets: Wallet[];
 };
 

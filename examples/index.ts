@@ -26,3 +26,13 @@ console.log('-- utils --');
 
 console.log('getImageUrl("clusters/")', getImageUrl('clusters/'));
 console.log('getProfileUrl("clusters/")', getProfileUrl('clusters/'));
+
+console.log(
+  'getRegistrationTransaction',
+  await clusters.getRegistrationTransaction(
+    [{ name: 'namethatdoesntexist1' }],
+    '0x0000000000000000000000000000000000000001',
+    '1',
+    '0x0000000000000000000000000000000000000005',
+  ),
+);

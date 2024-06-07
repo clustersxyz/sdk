@@ -100,6 +100,7 @@ export const fetchRegistrationTransaction = async (
   names: RegistrationName[],
   sender: string,
   network: Network,
+  referralAddress?: `0x${string}`,
   apiKey?: string,
 ): Promise<RegistrationResponse> => {
   const getData = await fetch(`${API_URL}/v${VERSION}/register`, {
@@ -109,6 +110,7 @@ export const fetchRegistrationTransaction = async (
       names,
       sender,
       network,
+      referralAddress,
     }),
   });
   const data = (await getData.json()) as RegistrationResponse;

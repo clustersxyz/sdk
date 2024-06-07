@@ -12,7 +12,7 @@ export type Cluster = {
   wallets: Wallet[];
 };
 
-export type Network = 1 | 10 | 56 | 137 | 8453 | 17000 | 42161 | 43114 | 11155111 | 'solana';
+export type Network = '1' | '10' | '56' | '137' | '8453' | '17000' | '42161' | '43114' | '11155111' | 'solana';
 
 export type NameAvailability = {
   name: string;

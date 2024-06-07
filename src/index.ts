@@ -102,9 +102,10 @@ export const Clusters = class {
     names: RegistrationName[],
     sender: string,
     network: Network,
+    referralAddress?: `0x${string}`,
   ): Promise<RegistrationResponse | null> => {
     try {
-      return await fetchRegistrationTransaction(names, sender, network, this.apiKey);
+      return await fetchRegistrationTransaction(names, sender, network, referralAddress, this.apiKey);
     } catch {
       return null;
     }
@@ -140,7 +141,7 @@ export const isNameValid = (name: string): boolean => {
   const bannedCharacters = ['/', ' '];
   const normalized = normalizeName(name);
   // Check if name contains any banned characters
-  if (bannedCharacters.some(char => normalized.includes(char))) return false;
+  if (bannedCharacters.some((char) => normalized.includes(char))) return false;
   // Is name > 32 bytes
   if (encodeURI(normalized).split(/%..|./).length - 1 > 32) return false;
   return true;

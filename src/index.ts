@@ -146,3 +146,12 @@ export const isNameValid = (name: string): boolean => {
   if (encodeURI(normalized).split(/%..|./).length - 1 > 32) return false;
   return true;
 };
+
+const name0 = 'abc123';
+const name1 = 'abc_123';
+const name2 = 'abc-123';
+const name3 = 'abc!123'; // Fails
+console.log(isNameValid(name0));
+console.log(isNameValid(name1));
+console.log(isNameValid(name2));
+console.log(isNameValid(name3));

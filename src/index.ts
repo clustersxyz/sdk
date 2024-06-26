@@ -138,10 +138,10 @@ export const normalizeName = (name: string): string => {
 };
 
 export const isNameValid = (name: string): boolean => {
-  const bannedCharacters = ['/', ' '];
+  const validCharacters = /^[a-zA-Z0-9-_]+$/;
   const normalized = normalizeName(name);
-  // Check if name contains any banned characters
-  if (bannedCharacters.some((char) => normalized.includes(char))) return false;
+  // Check if name contains only valid characters
+  if (!validCharacters.test(normalized)) return false;
   // Is name > 32 bytes
   if (encodeURI(normalized).split(/%..|./).length - 1 > 32) return false;
   return true;

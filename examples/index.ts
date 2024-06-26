@@ -1,4 +1,4 @@
-import { Clusters, getProfileUrl, getImageUrl } from '../lib/index';
+import { Clusters, getProfileUrl, getImageUrl, isNameValid } from '../src/index';
 
 const clusters = new Clusters();
 
@@ -36,3 +36,8 @@ console.log(
     '0x0000000000000000000000000000000000000005',
   ),
 );
+
+console.log(isNameValid('abc123'));
+console.log(isNameValid('abc_123'));
+console.log(isNameValid('abc-123'));
+console.log(isNameValid('abc!123')); // Fails

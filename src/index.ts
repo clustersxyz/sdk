@@ -1,3 +1,4 @@
+import { stringToHex } from 'viem';
 import {
   fetchAddress,
   fetchAddresses,
@@ -22,14 +23,16 @@ import type {
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;
+  isTestnet: boolean = false;
 
-  constructor(obj?: { apiKey: string }) {
+  constructor(obj?: { apiKey?: string; isTestnet?: boolean }) {
     this.apiKey = obj?.apiKey;
+    this.isTestnet = obj?.isTestnet || false;
   }
 
   getName = async (address: string): Promise<string | null> => {
     try {
-      return await fetchName(address, this.apiKey);
+      return await fetchName(address, this.isTestnet, this.apiKey);
     } catch (err) {
       return null;
     }
@@ -37,7 +40,7 @@ export const Clusters = class {
 
   getNames = async (addresses: string[]): Promise<{ address: string; name: string }[]> => {
     try {
-      return await fetchNames(addresses, this.apiKey);
+      return await fetchNames(addresses, this.isTestnet, this.apiKey);
     } catch (err) {
       return [];
     }
@@ -46,7 +49,7 @@ export const Clusters = class {
   getAddress = async (name: string): Promise<Wallet | null> => {
     try {
       const splitCluster = name.split('/');
-      return await fetchAddress(splitCluster[0], splitCluster[1] || undefined, this.apiKey);
+      return await fetchAddress(splitCluster[0], splitCluster[1] || undefined, this.isTestnet, this.apiKey);
     } catch {
       return null;
     }
@@ -54,7 +57,7 @@ export const Clusters = class {
 
   getAddresses = async (names: string[]): Promise<Wallet[]> => {
     try {
-      return await fetchAddresses(names, this.apiKey);
+      return await fetchAddresses(names, this.isTestnet, this.apiKey);
     } catch {
       return [];
     }
@@ -62,7 +65,7 @@ export const Clusters = class {
 
   getCluster = async (clusterName: string): Promise<Cluster | null> => {
     try {
-      return await fetchCluster(clusterName, this.apiKey);
+      return await fetchCluster(clusterName, this.isTestnet, this.apiKey);
     } catch {
       return null;
     }
@@ -70,7 +73,7 @@ export const Clusters = class {
 
   getClusters = async (clusterNames: string[]): Promise<Cluster[]> => {
     try {
-      return await fetchClusters(clusterNames, this.apiKey);
+      return await fetchClusters(clusterNames, this.isTestnet, this.apiKey);
     } catch {
       return [];
     }
@@ -78,7 +81,7 @@ export const Clusters = class {
 
   getNameAvailability = async (name: string): Promise<NameAvailability> => {
     try {
-      return await fetchNameAvailability(name, this.apiKey);
+      return await fetchNameAvailability(name, this.isTestnet, this.apiKey);
     } catch {
       return {
         name,
@@ -89,7 +92,7 @@ export const Clusters = class {
 
   getNameAvailabilityBatch = async (names: string[]): Promise<NameAvailability[]> => {
     try {
-      return await fetchNameAvailabilityBatch(names, this.apiKey);
+      return await fetchNameAvailabilityBatch(names, this.isTestnet, this.apiKey);
     } catch {
       return names.map((name) => ({
         name,
@@ -113,7 +116,7 @@ export const Clusters = class {
 
   getTransactionStatus = async (tx: `0x${string}`): Promise<RegistrationTransactionStatusResponse> => {
     try {
-      return await fetchTransactionStatus(tx, this.apiKey);
+      return await fetchTransactionStatus(tx, this.isTestnet, this.apiKey);
     } catch {
       return {
         tx,
@@ -138,11 +141,19 @@ export const normalizeName = (name: string): string => {
 };
 
 export const isNameValid = (name: string): boolean => {
-  const validCharacters = /^[a-zA-Z0-9-_]+$/;
+  const validCharacters = validNameRegex();
   const normalized = normalizeName(name);
   // Check if name contains only valid characters
   if (!validCharacters.test(normalized)) return false;
+
   // Is name > 32 bytes
-  if (encodeURI(normalized).split(/%..|./).length - 1 > 32) return false;
+  try {
+    if (stringToHex(normalized, { size: 32 })) return true;
+  } catch {
+    return false;
+  }
+
   return true;
 };
+
+export const validNameRegex = () => /^[a-zA-Z0-9\-_]+$/;

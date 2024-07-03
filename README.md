@@ -7,7 +7,7 @@ Read more about the [clusters.xyz](https://clusters.xyz) via our [documentation]
 ## Installation
 
 ```
-npm install @clustersxyz/sdk
+npm install @clustersxyz/sdk viem
 ```
 
 ## Setup

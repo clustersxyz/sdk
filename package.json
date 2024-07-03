@@ -36,6 +36,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
+    "tslib": "^2.6.3",
     "viem": "^2.16.4"
   }
 }

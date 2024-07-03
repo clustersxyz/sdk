@@ -1,6 +1,6 @@
 {
   "name": "@clustersxyz/sdk",
-  "version": "0.2.3",
+  "version": "0.3.0",
   "description": "",
   "main": "index.cjs",
   "module": "index.esm.js",
@@ -35,5 +35,7 @@
     "tslint-config-prettier": "1.18.0",
     "typescript": "5.4.5"
   },
-  "dependencies": {}
+  "dependencies": {
+    "viem": "^2.16.4"
+  }
 }

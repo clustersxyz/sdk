@@ -8,8 +8,8 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "strict": true,
-    "types": ["node"]
+    "types": ["node"],
   },
   "include": ["src/**/*"],
-  "exclude": ["examples/*"]
+  "exclude": ["examples/*"],
 }

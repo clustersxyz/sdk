@@ -12,17 +12,15 @@ import {
   fetchRegistrationTransaction,
   fetchTransactionStatus,
 } from './api';
-import type {
-  Cluster,
-  EventQueryFilter,
-  EventResponse,
+import { Cluster, Wallet } from './types';
+import {
   NameAvailability,
   Network,
   RegistrationName,
   RegistrationResponse,
   RegistrationTransactionStatusResponse,
-  Wallet,
-} from './types';
+} from './types/registration';
+import { EventQueryFilter, EventResponse } from './types/event';
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;

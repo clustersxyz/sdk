@@ -4,6 +4,7 @@ import {
   fetchAddresses,
   fetchCluster,
   fetchClusters,
+  fetchEvents,
   fetchName,
   fetchNameAvailability,
   fetchNameAvailabilityBatch,
@@ -11,15 +12,15 @@ import {
   fetchRegistrationTransaction,
   fetchTransactionStatus,
 } from './api';
-import type {
-  Cluster,
+import { Cluster, Wallet } from './types';
+import {
   NameAvailability,
   Network,
   RegistrationName,
   RegistrationResponse,
   RegistrationTransactionStatusResponse,
-  Wallet,
-} from './types';
+} from './types/registration';
+import { EventQueryFilter, EventResponse } from './types/event';
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;
@@ -123,6 +124,11 @@ export const Clusters = class {
         status: 'not_found',
       };
     }
+  };
+
+  getEvents = async (options?: EventQueryFilter): Promise<EventResponse> => {
+    if (this.isTestnet) throw Error('This response is not testnet compatible');
+    return await fetchEvents(options || {}, this.apiKey);
   };
 };
 

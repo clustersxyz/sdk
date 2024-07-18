@@ -1,18 +1,3 @@
-export type Wallet = {
-  address: string;
-  type: 'evm' | 'solana';
-  name: string;
-  isVerified: boolean;
-};
-
-export type Cluster = {
-  name: string;
-  profileUrl: string;
-  imageUrl: string;
-  hasCustomImage: boolean;
-  wallets: Wallet[];
-};
-
 export type Network =
   | '1'
   | '10'

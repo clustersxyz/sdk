@@ -1,12 +1,12 @@
+import { Cluster, Wallet } from './types';
 import {
-  Cluster,
   NameAvailability,
   Network,
   RegistrationName,
   RegistrationResponse,
   RegistrationTransactionStatus,
-  Wallet,
-} from './types';
+} from './types/registration';
+import { EventQueryFilter, EventResponse } from './types/event';
 
 const VERSION = '0.1';
 const API_URL = 'https://api.clusters.xyz';
@@ -160,5 +160,20 @@ export const fetchTransactionStatus = async (
     headers: generateHeaders(apiKey || undefined),
   });
   const data = (await getData.json()) as { tx: `0x${string}`; status: RegistrationTransactionStatus };
+  return data;
+};
+
+//
+
+export const fetchEvents = async (queryParams: EventQueryFilter, apiKey?: string): Promise<EventResponse> => {
+  const queryString = Object.keys(queryParams)
+    // @ts-ignore
+    .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(queryParams[key])}`)
+    .join('&');
+
+  const getData = await fetch(`${API_URL}/v${VERSION}/events?${queryString}`, {
+    headers: generateHeaders(apiKey || undefined),
+  });
+  const data = (await getData.json()) as EventResponse;
   return data;
 };

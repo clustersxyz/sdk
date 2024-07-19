@@ -23,28 +23,41 @@ export type EventQueryFilter = EventsQuery | EventsQueryFromTimestamp | EventsQu
 
 export type RegistrationEvent = {
   eventType: 'register';
+  clusterId: number;
   bytes32Address: `0x${string}`;
   address: string;
   addressType: AddressType;
-  clusterName: string;
   data: {
+    name: string;
     weiAmount: number;
   };
   timestamp: number;
 };
-export type UpdateEvent = {
-  eventType: 'update';
+
+export type UpdateWalletEvent = {
+  eventType: 'updateWallet';
+  clusterId: number;
   bytes32Address: `0x${string}`;
   address: string;
   addressType: AddressType;
-  clusterName: string | null;
   data: {
-    name: string | null;
+    name: string;
     isVerified: boolean;
   };
   timestamp: number;
 };
-export type Event = RegistrationEvent | UpdateEvent;
+
+export type RemoveWalletEvent = {
+  eventType: 'removeWallet';
+  clusterId: number;
+  bytes32Address: `0x${string}`;
+  address: string;
+  addressType: AddressType;
+  data: null;
+  timestamp: number;
+};
+
+export type Event = RegistrationEvent | UpdateWalletEvent | RemoveWalletEvent;
 export type EventResponse = {
   nextPage?: string;
   items: Event[];

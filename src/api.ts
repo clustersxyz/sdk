@@ -73,7 +73,7 @@ export const fetchAddresses = async (names: string[], isTestnet: boolean, apiKey
   return wallets;
 };
 
-export const fetchCluster = async (
+export const fetchClusterByName = async (
   name: string,
   isTestnet: boolean = false,
   apiKey?: string,
@@ -85,7 +85,7 @@ export const fetchCluster = async (
   return cluster;
 };
 
-export const fetchClusters = async (
+export const fetchClustersByName = async (
   names: string[],
   isTestnet: boolean = false,
   apiKey?: string,
@@ -97,6 +97,18 @@ export const fetchClusters = async (
   });
   const clusters = (await fetchClusters.json()) as Cluster[];
   return clusters;
+};
+
+export const fetchClusterByAddress = async (
+  address: string,
+  isTestnet: boolean = false,
+  apiKey?: string,
+): Promise<Cluster | null> => {
+  const fetchCluster = await fetch(`${API_URL}/v${VERSION}/cluster/address/${address}${testnetParam(isTestnet)}`, {
+    headers: generateHeaders(apiKey || undefined),
+  });
+  const cluster = (await fetchCluster.json()) as Cluster | null;
+  return cluster;
 };
 
 //

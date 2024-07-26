@@ -2,8 +2,9 @@ import { stringToHex } from 'viem';
 import {
   fetchAddress,
   fetchAddresses,
-  fetchCluster,
-  fetchClusters,
+  fetchClusterByAddress,
+  fetchClusterByName,
+  fetchClustersByName,
   fetchEvents,
   fetchName,
   fetchNameAvailability,
@@ -66,7 +67,7 @@ export const Clusters = class {
 
   getCluster = async (clusterName: string): Promise<Cluster | null> => {
     try {
-      return await fetchCluster(clusterName, this.isTestnet, this.apiKey);
+      return await fetchClusterByName(clusterName, this.isTestnet, this.apiKey);
     } catch {
       return null;
     }
@@ -74,9 +75,17 @@ export const Clusters = class {
 
   getClusters = async (clusterNames: string[]): Promise<Cluster[]> => {
     try {
-      return await fetchClusters(clusterNames, this.isTestnet, this.apiKey);
+      return await fetchClustersByName(clusterNames, this.isTestnet, this.apiKey);
     } catch {
       return [];
+    }
+  };
+
+  getClusterByAddress = async (address: string): Promise<Cluster | null> => {
+    try {
+      return await fetchClusterByAddress(address, this.isTestnet, this.apiKey);
+    } catch {
+      return null;
     }
   };
 

@@ -5,6 +5,7 @@ export type Wallet = {
   type: AddressType;
   name: string;
   isVerified: boolean;
+  chains: string[];
 };
 
 export type Cluster = {
@@ -12,5 +13,10 @@ export type Cluster = {
   profileUrl: string;
   imageUrl: string;
   hasCustomImage: boolean;
+  connectedTwitterId: string | null;
+  totalRegistrationWei: string;
+  defaultName: string;
+  chains: string[];
   wallets: Wallet[];
+  nameHoldings: string[];
 };

@@ -18,4 +18,5 @@ export type AddressType =
   | 'algorand'
   | 'filecoin'
   | 'ton'
+  | 'arweave'
   | null;

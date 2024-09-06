@@ -6,7 +6,8 @@ import {
   RegistrationResponse,
   RegistrationTransactionStatus,
 } from './types/registration';
-import { EventQueryFilter, EventResponse } from './types/event';
+import { DAConfig, EventQueryFilter, EventResponse } from './types/event';
+import { ClustersDA } from '@clustersxyz/data-availability/src';
 
 const VERSION = '0.1';
 const API_URL = 'https://api.clusters.xyz';
@@ -188,4 +189,14 @@ export const fetchEvents = async (queryParams: EventQueryFilter, apiKey?: string
   });
   const data = (await getData.json()) as EventResponse;
   return data;
+};
+
+export const fetchEventsDA = async (
+  startTimestamp: number,
+  endTimestamp: number,
+  daConfig?: DAConfig,
+): Promise<EventResponse> => {
+  const da = new ClustersDA(daConfig ? { arweaveRpc: daConfig } : {});
+  const events = await da.queryData(startTimestamp, endTimestamp);
+  return { items: events };
 };

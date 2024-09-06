@@ -6,6 +6,7 @@ import {
   fetchClusterByName,
   fetchClustersByName,
   fetchEvents,
+  fetchEventsDA,
   fetchName,
   fetchNameAvailability,
   fetchNameAvailabilityBatch,
@@ -21,14 +22,16 @@ import {
   RegistrationResponse,
   RegistrationTransactionStatusResponse,
 } from './types/registration';
-import { EventQueryFilter, EventResponse } from './types/event';
+import { DAConfig, EventQueryFilter, EventResponse } from './types/event';
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;
+  daConfig: DAConfig | undefined;
   isTestnet: boolean = false;
 
-  constructor(obj?: { apiKey?: string; isTestnet?: boolean }) {
+  constructor(obj?: { apiKey?: string; daConfig?: DAConfig; isTestnet?: boolean }) {
     this.apiKey = obj?.apiKey;
+    this.daConfig = obj?.daConfig;
     this.isTestnet = obj?.isTestnet || false;
   }
 
@@ -138,6 +141,11 @@ export const Clusters = class {
   getEvents = async (options?: EventQueryFilter): Promise<EventResponse> => {
     if (this.isTestnet) throw Error('This response is not testnet compatible');
     return await fetchEvents(options || {}, this.apiKey);
+  };
+
+  getEventsDA = async (startTimestamp: number, endTimestamp: number): Promise<EventResponse> => {
+    if (this.isTestnet) throw Error('This response is not testnet compatible');
+    return await fetchEventsDA(startTimestamp, endTimestamp, this.daConfig);
   };
 };
 

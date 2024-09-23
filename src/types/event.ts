@@ -62,9 +62,3 @@ export type EventResponse = {
   nextPage?: string;
   items: Event[];
 };
-
-export type DAConfig = {
-  host: string;
-  port: number;
-  protocol: 'http' | 'https';
-};

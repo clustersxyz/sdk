@@ -14,7 +14,7 @@ import {
   fetchRegistrationTransaction,
   fetchTransactionStatus,
 } from './api';
-import { Cluster, Wallet } from './types';
+import { Cluster, Wallet, DAConfig } from './types';
 import {
   NameAvailability,
   Network,
@@ -22,11 +22,11 @@ import {
   RegistrationResponse,
   RegistrationTransactionStatusResponse,
 } from './types/registration';
-import { DAConfig, EventQueryFilter, EventResponse } from './types/event';
+import { EventQueryFilter, EventResponse } from './types/event';
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;
-  daConfig: DAConfig | undefined;
+  daConfig: DAConfig | undefined = undefined;
   isTestnet: boolean = false;
 
   constructor(obj?: { apiKey?: string; daConfig?: DAConfig; isTestnet?: boolean }) {
@@ -143,9 +143,9 @@ export const Clusters = class {
     return await fetchEvents(options || {}, this.apiKey);
   };
 
-  getEventsDA = async (startTimestamp: number, endTimestamp: number): Promise<EventResponse> => {
+  getEventsDA = async (startTimestamp?: number, endTimestamp?: number): Promise<EventResponse> => {
     if (this.isTestnet) throw Error('This response is not testnet compatible');
-    return await fetchEventsDA(startTimestamp, endTimestamp, this.daConfig);
+    return await fetchEventsDA(this.daConfig, startTimestamp, endTimestamp);
   };
 };
 

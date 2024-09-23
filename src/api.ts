@@ -1,4 +1,4 @@
-import { Cluster, Wallet } from './types';
+import { Cluster, Wallet, DAConfig } from './types';
 import {
   NameAvailability,
   Network,
@@ -6,7 +6,7 @@ import {
   RegistrationResponse,
   RegistrationTransactionStatus,
 } from './types/registration';
-import { DAConfig, EventQueryFilter, EventResponse } from './types/event';
+import { EventQueryFilter, EventResponse } from './types/event';
 import { ClustersDA } from '@clustersxyz/data-availability/src';
 
 const VERSION = '0.1';
@@ -192,11 +192,12 @@ export const fetchEvents = async (queryParams: EventQueryFilter, apiKey?: string
 };
 
 export const fetchEventsDA = async (
-  startTimestamp: number,
-  endTimestamp: number,
-  daConfig?: DAConfig,
+  daConfig: DAConfig | undefined,
+  startTimestamp?: number,
+  endTimestamp?: number,
 ): Promise<EventResponse> => {
-  const da = new ClustersDA(daConfig ? { arweaveRpc: daConfig } : {});
+  if (typeof daConfig === undefined) throw new Error('daConfig must be defined to query via Arweave');
+  const da = new ClustersDA(daConfig);
   const events = await da.queryData(startTimestamp, endTimestamp);
   return { items: events };
 };

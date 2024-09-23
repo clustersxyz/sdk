@@ -20,3 +20,12 @@ export type Cluster = {
   wallets: Wallet[];
   nameHoldings: string[];
 };
+
+export type DAConfig = {
+  manifestUploader: string;
+  arweaveRpc?: {
+    host: string;
+    port: number;
+    protocol: 'http' | 'https';
+  };
+};

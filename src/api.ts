@@ -7,7 +7,7 @@ import {
   RegistrationTransactionStatus,
 } from './types/registration';
 import { EventQueryFilter, EventResponse } from './types/event';
-import { ClustersDA } from '@clustersxyz/data-availability/src';
+import { ClustersDA } from '@clustersxyz/data-availability';
 
 const VERSION = '0.1';
 const API_URL = 'https://api.clusters.xyz';
@@ -196,7 +196,7 @@ export const fetchEventsDA = async (
   startTimestamp?: number,
   endTimestamp?: number,
 ): Promise<EventResponse> => {
-  if (typeof daConfig === undefined) throw new Error('daConfig must be defined to query via Arweave');
+  if (daConfig === undefined) throw new Error('daConfig must be defined to query via Arweave');
   const da = new ClustersDA(daConfig);
   const events = await da.queryData(startTimestamp, endTimestamp);
   return { items: events };

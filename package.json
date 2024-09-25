@@ -1,6 +1,6 @@
 {
   "name": "@clustersxyz/sdk",
-  "version": "0.4.3",
+  "version": "0.4.4",
   "description": "",
   "main": "index.cjs",
   "module": "index.esm.js",
@@ -37,7 +37,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@clustersxyz/data-availability": "github:clustersxyz/data-availability",
+    "@clustersxyz/data-availability": "^0.0.2",
     "viem": "^2.16.4"
   }
 }

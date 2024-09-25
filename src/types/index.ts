@@ -27,5 +27,6 @@ export type DAConfig = {
     host: string;
     port: number;
     protocol: 'http' | 'https';
+    logging?: boolean;
   };
 };

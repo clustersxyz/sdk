@@ -37,7 +37,7 @@
     "typescript": "5.4.5"
   },
   "dependencies": {
-    "@clustersxyz/data-availability": "^0.0.2",
+    "@clustersxyz/data-availability": "^0.0.3",
     "viem": "^2.16.4"
   }
 }

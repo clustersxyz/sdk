@@ -1,27 +1,37 @@
 import { stringToHex } from 'viem';
 import {
-  fetchAddress,
   fetchAddresses,
-  fetchClusterByAddress,
+  fetchAddWallets,
+  fetchAuthMessage,
+  fetchAuthToken,
+  fetchClusterById,
   fetchClusterByName,
-  fetchClustersByName,
+  fetchClusterIdByAddress,
+  fetchCreateCluster,
   fetchEvents,
+  fetchGenerateWallet,
   fetchName,
-  fetchNameAvailability,
   fetchNameAvailabilityBatch,
   fetchNames,
-  fetchRegistrationTransaction,
+  fetchRegistrationTransactionEvm,
+  fetchRegistrationTransactionSolana,
+  fetchRemoveWallets,
   fetchTransactionStatus,
+  fetchUpdateWalletNames,
+  fetchValidateAuthSignature,
+  fetchVerifyWallet,
 } from './api';
-import { Cluster, Wallet } from './types';
 import {
   NameAvailability,
   Network,
-  RegistrationName,
-  RegistrationResponse,
+  RegistrationResponseEvm,
+  RegistrationResponseSolana,
   RegistrationTransactionStatusResponse,
 } from './types/registration';
 import { EventQueryFilter, EventResponse } from './types/event';
+import { Cluster, ClusterName } from './types/cluster';
+import { AuthMessage, AuthSignature } from './types/auth';
+import { GenerateWalletResponse } from './types/generate';
 
 export const Clusters = class {
   apiKey: string | undefined = undefined;
@@ -32,32 +42,36 @@ export const Clusters = class {
     this.isTestnet = obj?.isTestnet || false;
   }
 
-  getName = async (address: string): Promise<string | null> => {
-    try {
-      return await fetchName(address, this.isTestnet, this.apiKey);
-    } catch (err) {
-      return null;
-    }
+  getAuthMessage = async (): Promise<AuthMessage> => {
+    return await fetchAuthMessage(this.apiKey);
   };
 
-  getNames = async (addresses: string[]): Promise<{ address: string; name: string }[]> => {
+  getAuthToken = async (
+    signature: string,
+    signingDate: string,
+    type: 'evm' | 'solana' | 'polkadot-substrate',
+    wallet: string,
+  ): Promise<{ token: string }> => {
+    return await fetchAuthToken(signature, signingDate, type, wallet, this.apiKey);
+  };
+
+  validateAuthToken = async (token: string): Promise<AuthSignature & { isValid: boolean }> => {
+    return await fetchValidateAuthSignature(token, this.apiKey);
+  };
+
+  getName = async (address: string): Promise<ClusterName> => {
+    return await fetchName(address, this.isTestnet, this.apiKey);
+  };
+
+  getNames = async (addresses: string[]): Promise<ClusterName[]> => {
     try {
       return await fetchNames(addresses, this.isTestnet, this.apiKey);
-    } catch (err) {
+    } catch {
       return [];
     }
   };
 
-  getAddress = async (name: string): Promise<Wallet | null> => {
-    try {
-      const splitCluster = name.split('/');
-      return await fetchAddress(splitCluster[0], splitCluster[1] || undefined, this.isTestnet, this.apiKey);
-    } catch {
-      return null;
-    }
-  };
-
-  getAddresses = async (names: string[]): Promise<Wallet[]> => {
+  getAddresses = async (names: string[]): Promise<ClusterName[]> => {
     try {
       return await fetchAddresses(names, this.isTestnet, this.apiKey);
     } catch {
@@ -65,60 +79,34 @@ export const Clusters = class {
     }
   };
 
-  getCluster = async (clusterName: string): Promise<Cluster | null> => {
-    try {
-      return await fetchClusterByName(clusterName, this.isTestnet, this.apiKey);
-    } catch {
-      return null;
-    }
-  };
-
-  getClusters = async (clusterNames: string[]): Promise<Cluster[]> => {
-    try {
-      return await fetchClustersByName(clusterNames, this.isTestnet, this.apiKey);
-    } catch {
-      return [];
-    }
-  };
-
-  getClusterByAddress = async (address: string): Promise<Cluster | null> => {
-    try {
-      return await fetchClusterByAddress(address, this.isTestnet, this.apiKey);
-    } catch {
-      return null;
-    }
-  };
-
-  getNameAvailability = async (name: string): Promise<NameAvailability> => {
-    try {
-      return await fetchNameAvailability(name, this.isTestnet, this.apiKey);
-    } catch {
-      return {
-        name,
-        isAvailable: false,
-      };
-    }
-  };
-
-  getNameAvailabilityBatch = async (names: string[]): Promise<NameAvailability[]> => {
+  getNameAvailability = async (names: string[]): Promise<NameAvailability[]> => {
     try {
       return await fetchNameAvailabilityBatch(names, this.isTestnet, this.apiKey);
     } catch {
-      return names.map((name) => ({
-        name,
-        isAvailable: false,
-      }));
+      return names.map((name) => ({ name, isAvailable: false }));
     }
   };
 
-  getRegistrationTransaction = async (
-    names: RegistrationName[],
+  getRegistrationTransactionEvm = async (
+    names: { name: string; weiAmount?: string }[],
     sender: string,
     network: Network,
-    referralAddress?: `0x${string}`,
-  ): Promise<RegistrationResponse | null> => {
+    referralClusterId?: `0x${string}`,
+  ): Promise<RegistrationResponseEvm | null> => {
     try {
-      return await fetchRegistrationTransaction(names, sender, network, referralAddress, this.apiKey);
+      return await fetchRegistrationTransactionEvm(names, sender, network, referralClusterId, this.apiKey);
+    } catch {
+      return null;
+    }
+  };
+
+  getRegistrationTransactionSolana = async (
+    names: { name: string; weiAmount?: string }[],
+    sender: string,
+    referralClusterId?: `0x${string}`,
+  ): Promise<RegistrationResponseSolana | null> => {
+    try {
+      return await fetchRegistrationTransactionSolana(names, sender, referralClusterId, this.apiKey);
     } catch {
       return null;
     }
@@ -128,27 +116,113 @@ export const Clusters = class {
     try {
       return await fetchTransactionStatus(tx, this.isTestnet, this.apiKey);
     } catch {
-      return {
-        tx,
-        status: 'not_found',
-      };
+      return { tx, status: 'not_found' };
     }
   };
 
   getEvents = async (options?: EventQueryFilter): Promise<EventResponse> => {
-    if (this.isTestnet) throw Error('This response is not testnet compatible');
     return await fetchEvents(options || {}, this.apiKey);
+  };
+
+  createCluster = async (authToken: string): Promise<{ id: string } | null> => {
+    try {
+      return await fetchCreateCluster(authToken, this.isTestnet, this.apiKey);
+    } catch {
+      return null;
+    }
+  };
+
+  getClusterById = async (id: string): Promise<Cluster | null> => {
+    try {
+      return await fetchClusterById(id, this.isTestnet, this.apiKey);
+    } catch {
+      return null;
+    }
+  };
+
+  getClusterByName = async (name: string): Promise<Cluster | null> => {
+    try {
+      return await fetchClusterByName(name, this.isTestnet, this.apiKey);
+    } catch {
+      return null;
+    }
+  };
+
+  getClusterIdByAddress = async (address: string): Promise<{ clusterId: string | null }> => {
+    try {
+      return await fetchClusterIdByAddress(address, this.isTestnet, this.apiKey);
+    } catch {
+      return { clusterId: null };
+    }
+  };
+
+  addWallets = async (
+    wallets: { address: string; name: string; isPrivate: boolean }[],
+    authToken: string,
+  ): Promise<{ success: boolean }> => {
+    try {
+      return await fetchAddWallets(wallets, authToken, this.isTestnet, this.apiKey);
+    } catch {
+      return { success: false };
+    }
+  };
+
+  updateWalletNames = async (
+    wallets: { address: string; name: string }[],
+    authToken: string,
+  ): Promise<{ success: boolean }> => {
+    try {
+      return await fetchUpdateWalletNames(wallets, authToken, this.isTestnet, this.apiKey);
+    } catch {
+      return { success: false };
+    }
+  };
+
+  removeWallets = async (wallets: string[], authToken: string): Promise<{ success: boolean }> => {
+    try {
+      return await fetchRemoveWallets(wallets, authToken, this.isTestnet, this.apiKey);
+    } catch {
+      return { success: false };
+    }
+  };
+
+  verifyWallet = async (clusterId: string, authToken: string): Promise<{ success: boolean }> => {
+    try {
+      return await fetchVerifyWallet(clusterId, authToken, this.isTestnet, this.apiKey);
+    } catch {
+      return { success: false };
+    }
+  };
+
+  generateWallet = async (
+    type:
+      | 'evm'
+      | 'solana'
+      | 'bitcoin'
+      | 'ripple'
+      | 'aptos'
+      | 'dogecoin'
+      | 'litecoin'
+      | 'tron'
+      | 'near'
+      | 'cosmos'
+      | 'ton'
+      | 'algorand',
+    name: string,
+    isPrivate: boolean,
+    authToken: string,
+    passphrase?: string,
+  ): Promise<GenerateWalletResponse> => {
+    return await fetchGenerateWallet(type, name, isPrivate, authToken, this.isTestnet, passphrase, this.apiKey);
   };
 };
 
 export const getImageUrl = (name: string) => {
-  const splitName = name.toLowerCase().split('/');
-  return `https://cdn.clusters.xyz/profile/${splitName[0]}`;
+  return `https://cdn.clusters.xyz/profile-image/${name.toLowerCase()}`;
 };
 
 export const getProfileUrl = (name: string) => {
-  const splitName = name.toLowerCase().split('/');
-  return `https://clusters.xyz/${splitName[0]}`;
+  return `https://clusters.xyz/${name.toLowerCase()}`;
 };
 
 export const normalizeName = (name: string): string => {

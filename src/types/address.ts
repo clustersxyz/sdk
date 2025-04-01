@@ -19,4 +19,5 @@ export type AddressType =
   | 'filecoin'
   | 'ton'
   | 'arweave'
+  | 'polkadot-substrate'
   | null;

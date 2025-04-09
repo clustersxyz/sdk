@@ -34,11 +34,11 @@ import { AuthMessage, AuthSignature } from './types/auth';
 import { GenerateWalletResponse } from './types/generate';
 
 export const Clusters = class {
-  apiKey: string | undefined = undefined;
+  apiKey: string;
   isTestnet: boolean = false;
 
-  constructor(obj?: { apiKey?: string; isTestnet?: boolean }) {
-    this.apiKey = obj?.apiKey;
+  constructor(obj: { apiKey: string; isTestnet?: boolean }) {
+    this.apiKey = obj.apiKey;
     this.isTestnet = obj?.isTestnet || false;
   }
 
@@ -94,7 +94,7 @@ export const Clusters = class {
     referralClusterId?: `0x${string}`,
   ): Promise<RegistrationResponseEvm | null> => {
     try {
-      return await fetchRegistrationTransactionEvm(names, sender, network, referralClusterId, this.apiKey);
+      return await fetchRegistrationTransactionEvm(names, sender, network, this.apiKey, referralClusterId);
     } catch {
       return null;
     }
@@ -106,7 +106,7 @@ export const Clusters = class {
     referralClusterId?: `0x${string}`,
   ): Promise<RegistrationResponseSolana | null> => {
     try {
-      return await fetchRegistrationTransactionSolana(names, sender, referralClusterId, this.apiKey);
+      return await fetchRegistrationTransactionSolana(names, sender, this.apiKey, referralClusterId);
     } catch {
       return null;
     }
@@ -213,7 +213,7 @@ export const Clusters = class {
     authToken: string,
     passphrase?: string,
   ): Promise<GenerateWalletResponse> => {
-    return await fetchGenerateWallet(type, name, isPrivate, authToken, this.isTestnet, passphrase, this.apiKey);
+    return await fetchGenerateWallet(type, name, isPrivate, authToken, this.isTestnet, this.apiKey, passphrase);
   };
 };
 

@@ -282,3 +282,23 @@ export const fetchVerifyWallet = async (
   const data = (await getData.json()) as { success: boolean };
   return data;
 };
+
+export const fetchRegisterCommunityCluster = async (
+  communityName: string,
+  name: string,
+  authToken: string,
+  isTestnet: boolean,
+  walletAddress?: string,
+  apiKey?: string,
+): Promise<{ clusterName: string; owner: string }> => {
+  const getData = await fetch(
+    `${API_URL}/v${VERSION}/names/community/${communityName}/register${testnetParam(isTestnet)}`,
+    {
+      method: 'POST',
+      headers: generateHeaders(apiKey || undefined, authToken),
+      body: JSON.stringify({ name, walletAddress }),
+    },
+  );
+  const data = (await getData.json()) as { clusterName: string; owner: string };
+  return data;
+};

@@ -13,6 +13,7 @@ import {
   fetchName,
   fetchNameAvailabilityBatch,
   fetchNames,
+  fetchRegisterCommunityCluster,
   fetchRegistrationTransactionEvm,
   fetchRegistrationTransactionSolana,
   fetchRemoveWallets,
@@ -214,6 +215,22 @@ export const Clusters = class {
     passphrase?: string,
   ): Promise<GenerateWalletResponse> => {
     return await fetchGenerateWallet(type, name, isPrivate, authToken, this.isTestnet, passphrase, this.apiKey);
+  };
+
+  registerCommunityCluster = async (
+    communityName: string,
+    name: string,
+    authToken: string,
+    walletAddress?: string,
+  ): Promise<{ clusterName: string; owner: string }> => {
+    return await fetchRegisterCommunityCluster(
+      communityName,
+      name,
+      authToken,
+      this.isTestnet,
+      walletAddress,
+      this.apiKey,
+    );
   };
 };
 

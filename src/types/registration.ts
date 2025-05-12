@@ -9,6 +9,7 @@ export type Network =
   | '42161'
   | '43114'
   | '11155111'
+  | '98866'
   | 'solana';
 
 export type NameAvailability = { name: string; isAvailable: boolean };
